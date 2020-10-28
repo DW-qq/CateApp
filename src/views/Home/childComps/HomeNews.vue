@@ -4,9 +4,9 @@
             <p class="title">|今日新品</p>
             <div class="news_goods">
                 <ul>
-                    <li v-for="item in cake" :key="item.cakeId">
+                    <li v-for="item in cake" :key="item.cakeId"  @click="newsGoodsItem(item.cakeId,type)">
                         <div>
-                            <img :src="require('assets/img/cate/'+item.cakePhoto)" @load="NewsLoad">
+                            <img :src="require('assets/img/cake/'+item.cakePhoto)" @load="NewsLoad">
                             <p class="goods_title">{{item.cakeName}}</p>
                             <p class="price">{{item.cakePrice}}元/份</p>
                         </div>
@@ -22,7 +22,8 @@
         name: "HomeNews",
         data(){
             return{
-               isLoad:false
+               isLoad:false,
+                type:1
             }
         },
         props:{
@@ -41,6 +42,12 @@
                     this.$emit('NewsImgLoad');
                     this.isLoad = true
                 }
+            },
+            //发送事件
+            newsGoodsItem(id,type){
+                /*console.log(id);*/
+
+                this.$emit('newsGoodsItem',id,type)
             }
         }
 

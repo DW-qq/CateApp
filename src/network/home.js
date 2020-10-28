@@ -6,12 +6,12 @@ export function getFindAll(){
     })
 }
 
-export function getFindType(type,pageIndex) {
+export function getFindType(pageIndex,dessertId) {
     return request({
-        url:'/homeController/findType/'+type+'/'+pageIndex,
+        url:'/goodController/findType/'+pageIndex+'/'+dessertId,
         params: {
-            type:type,
-            pageIndex:pageIndex
+            pageIndex:pageIndex,
+            dessertId:dessertId
         }
     })
 

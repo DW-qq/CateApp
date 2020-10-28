@@ -1,14 +1,15 @@
 <template>
-  <div class="home">
-    <el-upload
-            class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
-      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
+  <div class="upload">
+    <div class="img-container">
+      <!-- 上传预览图片 -->
+      <img :src="src" alt />
+    </div>
+    <!-- 文件上传的input -->
+    <form class="input-file" enctype="multipart/form-data" method="post">
+      <input type="file" ref="upload" name="uploadImg" id="file" @change="getFile" multiple />
+      <!-- label一个 for 属性指向input的唯一 id ，这样点击label就相当于点击input -->
+      <label for="file">上传图片</label>
+    </form>
   </div>
 </template>
 
@@ -18,24 +19,27 @@ export default {
   name: 'Home',
   data() {
     return {
-      imageUrl: ''
+      src:require('assets/img/home/home1.png'),
+      srcPath:''//图片相对路径
     };
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isJPG && isLt2M;
+    getFile(e) {
+      let files = e.target.files[0]; //获取上传图片信息
+      let formData = new FormData()
+      formData.append('file',files)
+      this.$http.post("http://localhost:8899/userController/uploadImg",formData).then(result=>{
+        this.srcPath = result.data
+        this.src = require('assets/img/home/'+this.srcPath)
+        console.log(this.src)
+        console.log(result.data)
+      /*  if(result.data.flag){
+          /!*this.srcPath = result.data.message*!/
+          this.src = `/imgURL${this.srcPath}`
+        }else{
+          console.log(result.data.message)
+        }*/
+      })
     }
   }
 }

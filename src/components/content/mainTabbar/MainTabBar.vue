@@ -10,7 +10,7 @@
         <img slot="item-icon-active" src="~assets/img/tab/hot@yel.png" alt=""  />
         <div slot="item-text">热门</div>
       </tab-bar-item>
-      <tab-bar-item path="/cart">
+      <tab-bar-item path="/my">
         <img slot="item-icon" src="~assets/img/tab/my.png" alt="" />
         <img slot="item-icon-active" src="~assets/img/tab/my@yel.png" alt=""  />
         <div slot="item-text">我的</div>

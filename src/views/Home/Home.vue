@@ -18,9 +18,10 @@
             <Slideshow/>
             <home-swiper/>
             <!--今日新品-->
-            <HomeNews :cake="cake" @NewsImgLoad="NewsImgLoad"/>
+            <HomeNews :cake="cake" @NewsImgLoad="NewsImgLoad" @newsGoodsItem="newsGoodsItem"/>
             <tab-control :title="['甜点','奶茶' ,'红酒']" @tabClick="tabClick" ref="tabControl2" class="tab-control"></tab-control>
-            <GoodsList :goods="goods" :currentType="currentType"/>
+           <!-- <GoodsList :goods="goods" :currentType="dessertId"/>-->
+                <GoodsList :goods="goods"/>
             </div>
         </scroll>
         <back-top @click.native="backClick" v-show="isbackTop"/>
@@ -46,13 +47,14 @@
         name: "Home",
         data(){
             return{
-                currentType:'cake',
+                dessertId:1,
                 cake:[],
                 goods:[],
                 pageIndex:1,
                 isTabFixed:false,
                 tabOffseTop:0,
-                isbackTop:false
+                isbackTop:false,
+                saveY:0
             }
         },
         components:{
@@ -65,41 +67,55 @@
             Scroll,
             backTop
         },
-        created() {
-            this.getFindAll();
-            this.getFindType('cake')
-
-        },
         mixins:[backTopMixin],
         activated() {
-            console.log("你好");
-            console.log(this.$refs.scroll.scrollTo(0, this.saveY, 0));
+            console.log(this.saveY);
+            //1.先刷新
+            this.$refs.scroll.refresh()
+            //2.在滚到离开时的位置
+           this.$refs.scroll.scrollTo(0, this.saveY, 0);
+
+            console.log("新建")
+
+        },
+        deactivated() {
+            //记录离开时的位置
+            this.saveY = this.$refs.scroll.getCurrentY()
+            console.log(this.saveY)
+            console.log("记录离开时的位置")
+        },
+        created() {
+            this.getFindAll();
+            this.getFindType(1)
+            console.log("home")
+
         },
         methods:{
             /* 事件监听相关方法 */
             tabClick(index) {
                 switch (index) {
                     case 0:
-                        this.currentType = 'cake'
+                        this.dessertId = 1
                         break
                     case 1:
-                        this.currentType = 'grang'
+                        this.dessertId = 2
                         break
                     case 2:
-                        this.currentType = 'wine'
+                        this.dessertId = 3
                 }
                 //保存当前状态
                 this.$refs.tabControl2.currentIndex = index
                 this.$refs.tabControl.currentIndex = index
-                this.getFindType(this.currentType)
+                /*this.getFindType(this.dessertId)*/
+                console.log("dessertId="+this.dessertId)
+                this.getFindType(this.dessertId)
             },
             contentScroll(position){
                 //1.判断BackTop是否显示
                 this.listenShowBackTop(position)
               //决定tab-control是否吸顶（position:fixed）
-                /*console.log("aaa:"+position);*/
                 this.isTabFixed = -(position.y) > this.tabOffseTop
-                console.log(this.tabOffseTop);
+                /*console.log(this.tabOffseTop);*/
             },
             loadMore() {
                 console.log("加载更多");
@@ -110,17 +126,28 @@
                 this.tabOffseTop = this.$refs.tabControl2.$el.offsetTop
 
             },
+            //获取新品id跳转详情界面
+            newsGoodsItem(id,type){
+              console.log(id);
+                console.log(type);
+                this.$router.push({
+                    path:'/details',
+                    query:{id:id,type:type}
+                })
+                /* this.$router.push("/details"+id)*/
+            },
             getFindAll(){
                 getFindAll().then(res => {
                     this.cake = res
                 })
             },
-            getFindType(type){
+            getFindType(dessertId){
                 const pageIndex = this.pageIndex;
                 console.log(pageIndex);
-                getFindType(type,pageIndex).then(res =>{
+                console.log(dessertId)
+                getFindType(pageIndex,this.dessertId).then(res =>{
                     console.log(res);
-                    console.log(type);
+                    console.log(dessertId);
                     this.goods=res
                     this.pageIndex +=1 ;
                    /*this.$refs.scroll.finishPullUp()*/

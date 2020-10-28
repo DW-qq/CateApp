@@ -1,40 +1,21 @@
 <template>
     <div class="goods">
-        <div class="bd"  v-if="currentType=='cake'">
-                    <div class="cake_info" v-for="item in goods" :key="item.cakeId">
-                        <a href="">
-                            <img :src="require('assets/img/cate/'+item.cakePhoto)" v-if="item.cakePhoto != undefined">
-                            <p class="cate_title">{{item.cakeName}}</p> <span class="cate_count" v-if="item.cakesells != undefined">已销售:{{item.cakesells[0].csellNum}}</span><br>
-                            <span class="cate_price">{{item.cakePrice}}元/份</span>
-                            <input value="立即购买" type="button" class="btn">
-                        </a>
-                    </div>
-        </div>
-        <div class="bd"  v-else-if="currentType=='grang'">
-                    <div class="cake_info" v-for="item in goods" :key="item.grangId">
-                        <a href="">
-                            <img :src="require('assets/img/cate/'+item.grangPhoto)" v-if="item.grangPhoto != undefined">
-                            <p class="cate_title">{{item.grangName}}</p> <span class="cate_count" v-if="item.grangsells!= undefined">已销售：{{item.grangsells[0].gsellNum}}</span><br>
-                            <span class="cate_price">{{item.grangPrice}}元/份</span>
-                            <input value="立即购买" type="button" class="btn">
-                        </a>
+        <div class="bd" >
+                    <div class="cake_info" v-for="item in goods" :key="item.goodsId">
+                            <img :src="require('assets/img/good/'+item.goodsPhoto)" v-if="item.goodsPhoto != undefined">
+                            <p class="cate_title">{{item.goodsName}}</p> <span class="cate_count" v-if="item.sells != undefined">已销售:{{item.sells[0].sellNum}}</span><br>
+                            <span class="cate_price">{{item.goodsPrice}}元/份</span>
+                            <button  type="button" class="btn" @click="GoodsBtn(item.goodsId,item.dessertId)">立即购买</button>
+
                     </div>
         </div>
 
-        <div class="bd"  v-else-if="currentType=='wine'">
-                    <div class="cake_info" v-for="item in goods" :key="item.wineId">
-                        <a href="">
-                            <img :src="require('assets/img/cate/'+item.winePhoto)" v-if="item.winePhoto != undefined">
-                            <p class="cate_title">{{item.wineName}}</p> <span class="cate_count" v-if="item.wines!= undefined">已销售：{{item.wines[0].wsellNum}}</span><br>
-                            <span class="cate_price">{{item.winePrice}}元/份</span>
-                            <input value="立即购买" type="button" class="btn">
-                        </a>
-                    </div>
-        </div>
     </div>
 </template>
 
 <script>
+    import {GoodsBtn} from "../../../common/mixin";
+
     export default {
         name: "GoodsList",
         props:{
@@ -43,13 +24,11 @@
                 default(){
                     return []
                 }
-            },
-            currentType:{
-                type: String,
-                default() {
-                    return 'cake'
-                }
             }
+        },
+        mixins:[GoodsBtn],
+        methods:{
+
         }
     }
 </script>

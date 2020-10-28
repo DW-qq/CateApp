@@ -53,15 +53,20 @@
         },
         methods: {
             scrollTo(x,y,time=300) {
-                this.scroll && this.scroll.scrollTo(x,y,time)
+                this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x,y,time)
             },
             //刷新数据
             finishPullUp() {
-                this.scroll.finishPullUp()
+                this.scroll && this.scroll.finishPullUp && this.scroll.finishPullUp()
             },
             refresh() {
                 /* console.log("jiji") */
-                this.scroll && this.scroll.refresh()
+                this.scroll  && this.scroll.refresh && this.scroll.refresh()
+            },
+            //获取Y值
+            getCurrentY(){
+                //条件1 || 条件2 ||条件3
+                return this.scroll ? this.scroll.y : 0
             }
         }
     }
